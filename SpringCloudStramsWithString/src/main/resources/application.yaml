@@ -1,0 +1,29 @@
+spring:
+  kafka:
+    properties:
+      bootstrap-servers: localhost:9092
+  cloud:
+    stream:
+      function:
+        definition: produceChuckNoris;consumeChuckNoris
+      bindings:
+        produceChuckNoris-out-0:
+          binder: kafka
+          destination: chuckfacts
+          producer:
+            partitionCount: 2
+        consumeChuckNoris-in-0:
+          binder: kafka
+          destination: chuckfacts
+          group: kotlinFactsOutputter
+      kafka:
+        binder:
+          consumer-properties:
+            key.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+            value.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+          producer-properties:
+            key.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+            value.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+          auto-create-topics: true
+
+
