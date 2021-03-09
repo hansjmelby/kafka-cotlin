@@ -37,13 +37,8 @@ class DemoApplication {
 	fun consumeWeather(): Consumer<Message<WeatherObject>> {
 		return Consumer {
 			s:Message<WeatherObject>->
-				println("FACT : "+s.payload.description)
+				println("Weather is : ${s.payload.description} with the degree of ${s.payload.temperatureCelsius}")
 		}
-	}
-
-	@Bean
-	fun weatherMessageConverter():MessageConverter{
-		return StringJsonMessageConverter()
 	}
 
 	@Bean
