@@ -1,0 +1,31 @@
+spring:
+  kafka:
+    properties:
+      bootstrap-servers: localhost:9092
+  cloud:
+    stream:
+      function:
+        definition: produceWeather;consumeWeather
+      bindings:
+        produceWeather-out-0:
+          content-type: application/json
+          binder: kafka
+          destination: weather
+          producer:
+            partitionCount: 2
+        consumeWeather-in-0:
+          binder: kafka
+          destination: weather
+          group: kotlinWeatherOutputter
+      kafka:
+        binder:
+          consumer-properties:
+            key.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+            value.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+          producer-properties:
+            key.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+            value.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
+          auto-create-topics: true
+
+
+
