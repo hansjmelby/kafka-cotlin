@@ -5,7 +5,10 @@ spring:
   cloud:
     stream:
       function:
-        definition: produceChuckNoris;consumeChuckNoris
+        definition: produceChuckNoris;consumeChuckNoris;processWords
+        bindings:
+          processWords-in-0: chuckfacts
+          processWords-out-0: counts
       bindings:
         produceChuckNoris-out-0:
           binder: kafka
@@ -25,5 +28,12 @@ spring:
             key.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
             value.serializer: org.springframework.kafka.support.serializer.StringOrBytesSerializer
           auto-create-topics: true
+        streams:
+          binder:
+            application-id: chuck-norris-word-count
+            configuration:
+              default.key.serde: org.apache.kafka.common.serialization.Serdes$StringSerde
+              default.value.serde: org.apache.kafka.common.serialization.Serdes$BytesSerde
+              commit.interval.ms: 1000
 
 
