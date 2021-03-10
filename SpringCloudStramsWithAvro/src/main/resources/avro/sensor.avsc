@@ -1,0 +1,11 @@
+{
+  "namespace" : "example.avro",
+  "type" : "record",
+  "name" : "Sensor",
+  "fields" : [
+    {"name":"id","type":"string"},
+    {"name":"temperature", "type":"float", "default":0.0},
+    {"name":"acceleration", "type":"float","default":0.0},
+    {"name":"velocity","type":"float","default":0.0}
+  ]
+}

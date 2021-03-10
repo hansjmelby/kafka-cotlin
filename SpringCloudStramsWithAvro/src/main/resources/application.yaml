@@ -1,0 +1,31 @@
+spring:
+  kafka:
+    properties:
+      bootstrap-servers: localhost:9092
+  cloud:
+    stream:
+      function:
+        definition: produceSensor;streamSensor;
+      bindings:
+        produceSensor-out-0:
+          destination: sensor-avro
+          producer:
+            use-native-encoding: true
+            partitionCount: 2
+        streamSensor-in-0:
+          destination: sensor-avro
+          group: kotlinSensoravroOutputter
+      kafka:
+        bindings:
+          produceSensor-out-0:
+            producer:
+              configuration:
+                schema.registry.url: http://localhost:8081
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+        streams:
+          binder:
+            application-id: SensorStreamReader
+            configuration:
+              schema.registry.url: http://localhost:8081
+              specific.avro.reader: true
+

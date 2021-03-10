@@ -1,0 +1,12 @@
+{
+  "namespace" : "example.avro",
+  "type" : "record",
+  "name" : "Book2",
+  "fields" : [
+    {"name":"author","type":"string"},
+    {"name":"title","type":"string"},
+    {"name":"publisher","type":"string"},
+    {"name":"genre","type":"string"},
+    {"name":"price","type":"double","default":0.0}
+  ]
+}
