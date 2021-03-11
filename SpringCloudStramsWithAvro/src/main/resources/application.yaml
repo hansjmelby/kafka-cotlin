@@ -5,10 +5,15 @@ spring:
   cloud:
     stream:
       function:
-        definition: consumeSensor;produceSensor;streamSensor;
+        definition: consumeSensor;produceSensor;streamSensor;produceBook2;consumeBook2
       bindings:
         produceSensor-out-0:
           destination: sensor-avro
+          producer:
+            use-native-encoding: true
+            partitionCount: 2
+        produceBook2-out-0:
+          destination: book-avro
           producer:
             use-native-encoding: true
             partitionCount: 2
@@ -19,6 +24,10 @@ spring:
           destination: sensor-avro
           group: kotlinSensoravroOutputter2
           content-type: application/*+avro
+        consumeBook2-in-0:
+          destination: book-avro
+          group: kotlinBookavroOutputter
+          content-type: application/*+avro
       kafka:
         binder:
           consumer-properties:
@@ -28,6 +37,11 @@ spring:
             specific.avro.reader: true
         bindings:
           produceSensor-out-0:
+            producer:
+              configuration:
+                schema.registry.url: http://localhost:8081
+                value.serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+          produceBook2-out-0:
             producer:
               configuration:
                 schema.registry.url: http://localhost:8081

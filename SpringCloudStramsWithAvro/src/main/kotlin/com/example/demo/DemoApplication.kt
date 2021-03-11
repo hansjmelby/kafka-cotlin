@@ -3,6 +3,7 @@ package com.example.demo
 
 import com.github.javafaker.Faker
 import com.github.javafaker.Weather
+import example.avro.Book2
 import example.avro.Sensor
 import org.apache.kafka.streams.kstream.ForeachAction
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,10 +49,29 @@ class DemoApplication {
 		}
 	}
 	@Bean
+	fun produceBook2(): Supplier<Message<Book2>> {
+		return Supplier {
+			var book = Faker.instance().book()
+			Faker.instance().commerce().price(50.0,400.0)
+
+			var weather = Faker.instance().weather()
+			var builder = MessageBuilder.withPayload(Book2(book.author(),book.title(),book.publisher(),book.genre(),Faker.instance().commerce().price(50.0,400.0).replace(",",".").toDouble()))
+			builder.build()
+
+		}
+	}
+	@Bean
 	fun consumeBook(): Consumer<Message<Book>> {
 		return Consumer {
 			s:Message<Book>->
 				println("Book sold : ${s.payload} ")
+		}
+	}
+	@Bean
+	fun consumeBook2(): Consumer<Message<Book2>> {
+		return Consumer {
+				s:Message<Book2>->
+			println("Book2 sold : ${s.payload} ")
 		}
 	}
 
@@ -89,8 +109,14 @@ class DemoApplication {
 	}
 
 	@Bean
-	fun avroInSerde(): Serde<Sensor?>? {
+	fun avroInSerdeSensor(): Serde<Sensor?>? {
 		val avroInSerde = SpecificAvroSerde<Sensor>()
+		val serdeProperties: Map<String, Any> = HashMap()
+		return avroInSerde
+	}
+	@Bean
+	fun avroInSerdeBook(): Serde<Book2?>? {
+		val avroInSerde = SpecificAvroSerde<Book2>()
 		val serdeProperties: Map<String, Any> = HashMap()
 		return avroInSerde
 	}
