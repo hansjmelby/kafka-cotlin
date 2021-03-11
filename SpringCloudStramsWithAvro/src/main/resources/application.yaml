@@ -5,7 +5,7 @@ spring:
   cloud:
     stream:
       function:
-        definition: produceSensor;streamSensor;
+        definition: consumeSensor;produceSensor;streamSensor
       bindings:
         produceSensor-out-0:
           destination: sensor-avro
@@ -15,7 +15,17 @@ spring:
         streamSensor-in-0:
           destination: sensor-avro
           group: kotlinSensoravroOutputter
+        consumeSensor-in-0:
+          destination: sensor-avro
+          group: kotlinSensoravroOutputter
+          content-type: application/*+avro
       kafka:
+        binder:
+          consumer-properties:
+            key.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            value.deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+            schema.registry.url: http://localhost:8081
+            specific.avro.reader: true
         bindings:
           produceSensor-out-0:
             producer:

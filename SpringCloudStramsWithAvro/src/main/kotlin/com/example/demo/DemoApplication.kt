@@ -23,17 +23,14 @@ import java.util.function.Consumer
 import java.util.function.Supplier
 import org.apache.kafka.streams.kstream.KStream
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde
+import org.apache.avro.generic.GenericRecord
 
 import org.apache.kafka.common.serialization.Serde
-
-
-
-
-
-
+import org.springframework.cloud.stream.schema.client.EnableSchemaRegistryClient
 
 
 @SpringBootApplication
+@EnableSchemaRegistryClient
 class DemoApplication {
 	private val random = Random()
 
@@ -46,7 +43,6 @@ class DemoApplication {
 
 			var weather = Faker.instance().weather()
 			var builder = MessageBuilder.withPayload(Book(book.author(),book.title(),book.publisher(),book.genre(),Faker.instance().commerce().price(50.0,400.0).replace(",",".").toDouble()))
-			//builder.setHeader("content-type","application/json")
 			builder.build()
 
 		}
@@ -72,10 +68,11 @@ class DemoApplication {
 	}
 
 	@Bean
-	fun consumeSensor2(): Consumer<Message<Sensor>>{
+	fun consumeSensor(): Consumer<Message<GenericRecord>>{
 		return Consumer {
-			println("headers : ${it.headers}")
-			println("body : ${it.payload}")
+
+			println("consumeSensor headers : ${it.headers}")
+			println("consumeSensor : ${it.payload.schema}")
 		}
 
 	}
@@ -84,19 +81,13 @@ class DemoApplication {
 		return Consumer { input: KStream<Sensor?, Sensor> ->
 			input.peek { key: Sensor?, value: Sensor ->
 				println(
-					" value: $value"
+					" streamSensor: $value"
 				)
 			}
 		}
 
 	}
 
-	/*
-	@Bean
-	fun converter(): RecordMessageConverter {
-		return StringJsonMessageConverter()
-	}
-	 */
 	@Bean
 	fun avroInSerde(): Serde<Sensor?>? {
 		val avroInSerde = SpecificAvroSerde<Sensor>()
