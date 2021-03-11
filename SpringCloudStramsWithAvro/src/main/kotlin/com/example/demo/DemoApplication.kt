@@ -108,12 +108,18 @@ class DemoApplication {
 
 	}
 
+	/*
+	* Beans needed if stremaing is used (streamSensor)
+	* */
 	@Bean
 	fun avroInSerdeSensor(): Serde<Sensor?>? {
 		val avroInSerde = SpecificAvroSerde<Sensor>()
 		val serdeProperties: Map<String, Any> = HashMap()
 		return avroInSerde
 	}
+	/*
+	* not needed now, but will be needed if we stream Book (avro)
+	* */
 	@Bean
 	fun avroInSerdeBook(): Serde<Book2?>? {
 		val avroInSerde = SpecificAvroSerde<Book2>()
