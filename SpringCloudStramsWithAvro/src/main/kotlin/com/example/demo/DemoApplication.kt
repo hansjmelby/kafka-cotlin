@@ -68,11 +68,11 @@ class DemoApplication {
 	}
 
 	@Bean
-	fun consumeSensor(): Consumer<Message<GenericRecord>>{
+	fun consumeSensor(): Consumer<Message<Sensor>>{
 		return Consumer {
 
 			println("consumeSensor headers : ${it.headers}")
-			println("consumeSensor : ${it.payload.schema}")
+			println("consumeSensor : ${it.payload}")
 		}
 
 	}
