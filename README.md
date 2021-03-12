@@ -1,6 +1,6 @@
 # kafka-cotlin
 
-# Setting up the envoroment
+# Setting up the enviroment
 
 docker-compose up -d
 
