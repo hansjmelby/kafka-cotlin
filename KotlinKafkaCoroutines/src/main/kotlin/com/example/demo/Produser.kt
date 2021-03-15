@@ -75,7 +75,7 @@ fun main() {
 
             // Send message asynchronously.
             val f = producer.send(record)
-            /*
+
             try {
                 // Get metadata about the sent record. This is a blocking operation.
                 val m = f.get()
@@ -88,7 +88,7 @@ fun main() {
             } catch (e: ExecutionException) {
                 e.printStackTrace()
             }
-            */
+
 
             Thread.sleep(1000)
             println("sleeping for 1 second..")
@@ -114,3 +114,5 @@ fun main() {
     // Remember to close the producer at the end, to avoid resource leakage (e.g. threads).
     producer.close()
 }
+
+
